@@ -8,21 +8,31 @@ sources:
       tables:
         - name: customers
           description: One record per customer.
+          freshness: null          
         - name: orders
           description: One record per order. Includes cancelled and deleted orders.
           loaded_at_field: _etl_loaded_at
-          freshness:
-            warn_after: {count: 1, period: day}
-            error_after: {count: 10, period: day}
+          freshness: 
+            error_after:
+              count: 10
+              period: day
+            warn_after:
+              count: 1
+              period: day
 
     - name: stripe
       description: This is a replica of the Snowflake database used by our app
       database: raw
       schema: stripe
+      loaded_at_field: _batched_at
+      freshness: 
+        error_after:
+          count: 10
+          period: day
+        warn_after:
+          count: 1
+          period: day
+      
       tables:
         - name: payment
           description: Records from the payments of the orders.
-          loaded_at_field: _batched_at
-          freshness:
-            warn_after: {count: 1, period: day}
-            error_after: {count: 10, period: day}
