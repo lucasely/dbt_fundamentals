@@ -8,9 +8,19 @@ sources:
       tables:
         - name: customers
           description: One record per customer.
+          columns:
+            - name: id
+              tests:
+                - unique
+                - not_null
           freshness: null          
         - name: orders
           description: One record per order. Includes cancelled and deleted orders.
+          columns:
+            - name: id
+              tests:
+                - unique
+                - not_null
           loaded_at_field: _etl_loaded_at
           freshness: 
             error_after:
@@ -36,3 +46,7 @@ sources:
       tables:
         - name: payment
           description: Records from the payments of the orders.
+          columns:
+            - name: orderid
+              tests:
+                - not_null
