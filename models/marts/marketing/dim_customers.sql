@@ -9,10 +9,10 @@ with
 
         select 
             customer_id,
-            min(order_date) as first_order_date,
-            max(order_date) as most_recent_order_date,
+            min(created_at) as first_order_date,
+            max(created_at) as most_recent_order_date,
             count(order_id) as number_of_orders,
-            sum(amount) amount 
+            sum(amount) as amount 
         from {{ ref("fct_orders") }} 
         group by all
 
@@ -21,15 +21,15 @@ with
     final as (
 
         select
-            c.customer_id,
-            c.first_name,
-            c.last_name,
-            p.first_order_date,
-            p.most_recent_order_date,
-            coalesce(p.number_of_orders, 0) as number_of_orders,
-            p.amount as lifetime_value
-        from customers c
-        left join payments p using (customer_id)
+            customers.customer_id,
+            customers.first_name,
+            customers.last_name,
+            payments.first_order_date,
+            payments.most_recent_order_date,
+            coalesce(payments.number_of_orders, 0) as number_of_orders,
+            payments.amount as lifetime_value
+        from customers
+        left join payments using (customer_id)
 
     )
 
