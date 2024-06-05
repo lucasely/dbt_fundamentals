@@ -1,7 +1,8 @@
 select
+    id as payment_id,
     orderid as order_id,
-    created as order_date,
+    date_trunc('day', created) as order_date,
     paymentmethod as payment_method,
     status,
-    amount
+    amount / 100 as amount
 from {{ source('stripe', 'payment') }}
